@@ -14,14 +14,17 @@ interface NewAppointmentProps {
 }
 
 const services = [
-  { name: 'Pernas Completas', price: 80 },
-  { name: 'Axilas', price: 25 },
-  { name: 'Virilha', price: 35 },
-  { name: 'Braços', price: 40 },
-  { name: 'Buço', price: 15 },
-  { name: 'Sobrancelha', price: 20 },
-  { name: 'Corpo Todo', price: 150 },
-  { name: 'Pernas + Axilas', price: 95 },
+  { name: 'Íntima completa', price: 55 },
+  { name: 'Axilas', price: 18 },
+  { name: 'Buço', price: 10 },
+  { name: 'Perna inteira', price: 45 },
+  { name: 'Meia perna', price: 25 },
+  { name: 'Braço', price: 25 },
+  { name: 'Glúteos', price: 18 },
+  { name: 'Íntima cavada', price: 25 },
+  { name: 'Rosto', price: 35 },
+  { name: 'Barriga', price: 18 },
+  { name: 'Depilação completa', price: 110 },
 ];
 
 export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
@@ -207,11 +210,18 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
                 <SelectContent>
                   {services.map((service) => (
                     <SelectItem key={service.name} value={service.name}>
-                      {service.name} - R$ {service.price.toFixed(2)}
+                      {service.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <Input
+                type="text"
+                placeholder="Ou digite um serviço personalizado"
+                value={formData.service}
+                onChange={(e) => setFormData(prev => ({ ...prev, service: e.target.value }))}
+                className={`glass mt-2 ${errors.service ? 'border-destructive' : ''}`}
+              />
               {errors.service && (
                 <p className="text-sm text-destructive">{errors.service}</p>
               )}

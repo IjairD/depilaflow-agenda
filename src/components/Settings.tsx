@@ -23,11 +23,6 @@ export function Settings() {
       sms: false,
       reminder: true,
     },
-    defaultServices: [
-      { name: 'Pernas Completas', price: 80 },
-      { name: 'Axilas', price: 25 },
-      { name: 'Virilha', price: 35 },
-    ],
     reminderTime: '1', // horas antes
     currency: 'BRL',
     timezone: 'America/Sao_Paulo',
@@ -239,59 +234,6 @@ export function Settings() {
           </div>
         </Card>
 
-        {/* Serviços Padrão */}
-        <Card className="glass p-6 border-0 shadow-glass animate-fade-in">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 rounded-lg bg-destructive-light">
-              <DollarSign className="w-5 h-5 text-destructive" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground">
-              Preços dos Serviços
-            </h3>
-          </div>
-          
-          <div className="space-y-3">
-            {settings.defaultServices.map((service, index) => (
-              <div key={index} className="flex items-center space-x-3">
-                <Input
-                  value={service.name}
-                  onChange={(e) => {
-                    const newServices = [...settings.defaultServices];
-                    newServices[index].name = e.target.value;
-                    updateSetting('defaultServices', newServices);
-                  }}
-                  className="glass flex-1"
-                  placeholder="Nome do serviço"
-                />
-                <div className="w-24">
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={service.price}
-                    onChange={(e) => {
-                      const newServices = [...settings.defaultServices];
-                      newServices[index].price = parseFloat(e.target.value) || 0;
-                      updateSetting('defaultServices', newServices);
-                    }}
-                    className="glass"
-                    placeholder="Preço"
-                  />
-                </div>
-              </div>
-            ))}
-            
-            <Button
-              variant="outline"
-              onClick={() => {
-                const newServices = [...settings.defaultServices, { name: '', price: 0 }];
-                updateSetting('defaultServices', newServices);
-              }}
-              className="w-full glass-primary"
-            >
-              Adicionar Serviço
-            </Button>
-          </div>
-        </Card>
       </div>
 
       {/* Save Button */}
