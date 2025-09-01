@@ -203,7 +203,7 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
                         </div>
 
                         {/* Status and Actions */}
-                        <div className="flex items-center space-x-6 mt-4 md:mt-0">
+                        <div className="flex items-center space-x-6 mt-4 md:mt-0 md:ml-6">
                           {/* Status Badge */}
                           <Select
                             value={appointment.status}
