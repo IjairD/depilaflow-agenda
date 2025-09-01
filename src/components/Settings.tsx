@@ -306,34 +306,6 @@ export function Settings() {
         </Button>
       </div>
 
-      {/* Privacy & Terms */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
-        <Card className="glass p-6 border-0 shadow-glass">
-          <h3 className="text-lg font-semibold text-foreground mb-3">
-            Política de Privacidade
-          </h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Seus dados são protegidos e nunca compartilhados com terceiros. 
-            Todas as informações são criptografadas e armazenadas com segurança.
-          </p>
-          <Button variant="outline" className="glass-primary">
-            Leia a Política Completa
-          </Button>
-        </Card>
-
-        <Card className="glass p-6 border-0 shadow-glass">
-          <h3 className="text-lg font-semibold text-foreground mb-3">
-            Termos de Uso
-          </h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Este sistema foi desenvolvido para facilitar a gestão do seu negócio. 
-            Use de forma responsável e mantenha seus dados sempre atualizados.
-          </p>
-          <Button variant="outline" className="glass-primary">
-            Ver Termos Completos
-          </Button>
-        </Card>
-      </div>
     </div>
   );
 }

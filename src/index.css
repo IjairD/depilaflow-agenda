@@ -142,7 +142,7 @@
   /* Button variants */
   .btn-gradient {
     background: var(--primary-gradient);
-    @apply text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    @apply text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300;
   }
 
   .btn-glass {
@@ -163,7 +163,7 @@
   }
 
   .hover-lift {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:shadow-lg;
   }
 
   /* Progress bar */

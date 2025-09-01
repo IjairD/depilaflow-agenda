@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Calendar, Clock, DollarSign, Edit3, Search, Trash2, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Appointment } from '../types';
 
@@ -109,9 +110,7 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
             <SelectContent>
               <SelectItem value="all">Todos Status</SelectItem>
               <SelectItem value="agendado">Agendados</SelectItem>
-              <SelectItem value="confirmado">Confirmados</SelectItem>
               <SelectItem value="concluido">Concluídos</SelectItem>
-              <SelectItem value="cancelado">Cancelados</SelectItem>
             </SelectContent>
           </Select>
         </Card>
@@ -204,7 +203,7 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
                         </div>
 
                         {/* Status and Actions */}
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-6 mt-4 md:mt-0">
                           {/* Status Badge */}
                           <Select
                             value={appointment.status}
@@ -217,22 +216,41 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="agendado">Agendado</SelectItem>
-                              <SelectItem value="confirmado">Confirmado</SelectItem>
                               <SelectItem value="concluido">Concluído</SelectItem>
-                              <SelectItem value="cancelado">Cancelado</SelectItem>
                             </SelectContent>
                           </Select>
 
                           {/* Actions */}
                           <div className="flex space-x-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="glass hover:bg-destructive-light text-destructive"
-                              onClick={() => onDeleteAppointment(appointment.id)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="glass hover:bg-destructive-light text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Cancelar Agendamento</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Tem certeza que deseja cancelar o agendamento de {appointment.clientName}?
+                                    Esta ação não pode ser desfeita.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Não cancelar</AlertDialogCancel>
+                                  <AlertDialogAction 
+                                    onClick={() => onDeleteAppointment(appointment.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Sim, cancelar
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </div>
                       </div>
