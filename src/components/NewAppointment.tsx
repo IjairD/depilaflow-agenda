@@ -121,15 +121,15 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
     setFormData(prev => {
       const newFormData = {
         ...prev,
-        [serviceKey]: serviceName,
+        [serviceKey]: serviceName === 'none' ? '' : serviceName,
       };
       
       // Calculate total price
-      const service1Price = serviceKey === 'service1' ? (service?.price || 0) : 
+      const service1Price = serviceKey === 'service1' ? (serviceName === 'none' ? 0 : service?.price || 0) : 
         (services.find(s => s.name === prev.service1)?.price || 0);
-      const service2Price = serviceKey === 'service2' ? (service?.price || 0) : 
+      const service2Price = serviceKey === 'service2' ? (serviceName === 'none' ? 0 : service?.price || 0) : 
         (services.find(s => s.name === prev.service2)?.price || 0);
-      const service3Price = serviceKey === 'service3' ? (service?.price || 0) : 
+      const service3Price = serviceKey === 'service3' ? (serviceName === 'none' ? 0 : service?.price || 0) : 
         (services.find(s => s.name === prev.service3)?.price || 0);
       
       newFormData.price = service1Price + service2Price + service3Price;
@@ -256,7 +256,7 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
                   <SelectValue placeholder="Selecione o segundo serviço" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum</SelectItem>
+                  <SelectItem value="none">Nenhum</SelectItem>
                   {services.map((service) => (
                     <SelectItem key={service.name} value={service.name}>
                       {service.name}
@@ -274,7 +274,7 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
                   <SelectValue placeholder="Selecione o terceiro serviço" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum</SelectItem>
+                  <SelectItem value="none">Nenhum</SelectItem>
                   {services.map((service) => (
                     <SelectItem key={service.name} value={service.name}>
                       {service.name}
