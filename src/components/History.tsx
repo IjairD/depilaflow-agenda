@@ -36,8 +36,27 @@ export function History({ appointments }: HistoryProps) {
   const uniqueClients = new Set(filteredHistory.map(apt => apt.clientName)).size;
   const averageTicket = filteredHistory.length > 0 ? totalRevenue / filteredHistory.length : 0;
 
-  // Serviços únicos para o filtro
-  const uniqueServices = Array.from(new Set(completedAppointments.map(apt => apt.service)));
+  // Serviços predefinidos para o filtro
+  const predefinedServices = [
+    'Íntima completa',
+    'Axilas', 
+    'Buço',
+    'Perna inteira',
+    'Meia perna',
+    'Braço',
+    'Glúteos',
+    'Íntima cavada',
+    'Rosto',
+    'Barriga',
+    'Depilação completa',
+    'Outro'
+  ];
+  
+  // Combinar serviços predefinidos com únicos do histórico
+  const uniqueServices = Array.from(new Set([
+    ...predefinedServices,
+    ...completedAppointments.map(apt => apt.service)
+  ])).sort();
 
   // Agrupamento por mês
   const appointmentsByMonth = filteredHistory.reduce((acc, appointment) => {

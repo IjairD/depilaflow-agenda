@@ -36,7 +36,8 @@ export function Settings() {
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsSaving(false);
     
-    // Aqui seria integrado com o backend/localStorage
+    // Salva no localStorage
+    localStorage.setItem('nd_depilacao_settings', JSON.stringify(settings));
     console.log('Settings saved:', settings);
   };
 
@@ -124,59 +125,6 @@ export function Settings() {
           </div>
         </Card>
 
-        {/* Horário de Funcionamento */}
-        <Card className="glass p-6 border-0 shadow-glass animate-fade-in">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="p-2 rounded-lg bg-warning-light">
-              <Clock className="w-5 h-5 text-warning" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground">
-              Horário de Funcionamento
-            </h3>
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="startTime">Horário de Abertura</Label>
-              <Input
-                id="startTime"
-                type="time"
-                value={settings.workingHours.start}
-                onChange={(e) => updateSetting('workingHours.start', e.target.value)}
-                className="glass"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="endTime">Horário de Fechamento</Label>
-              <Input
-                id="endTime"
-                type="time"
-                value={settings.workingHours.end}
-                onChange={(e) => updateSetting('workingHours.end', e.target.value)}
-                className="glass"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="reminderTime">Lembrete (horas antes)</Label>
-              <Select 
-                value={settings.reminderTime} 
-                onValueChange={(value) => updateSetting('reminderTime', value)}
-              >
-                <SelectTrigger className="glass">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0.5">30 minutos</SelectItem>
-                  <SelectItem value="1">1 hora</SelectItem>
-                  <SelectItem value="2">2 horas</SelectItem>
-                  <SelectItem value="24">1 dia</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </Card>
 
         {/* Notificações */}
         <Card className="glass p-6 border-0 shadow-glass animate-fade-in">
@@ -230,6 +178,24 @@ export function Settings() {
                 checked={settings.notifications.reminder}
                 onCheckedChange={(checked) => updateSetting('notifications.reminder', checked)}
               />
+            </div>
+
+            <div>
+              <Label htmlFor="reminderTime">Lembrete (horas antes)</Label>
+              <Select 
+                value={settings.reminderTime} 
+                onValueChange={(value) => updateSetting('reminderTime', value)}
+              >
+                <SelectTrigger className="glass">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0.5">30 minutos</SelectItem>
+                  <SelectItem value="1">1 hora</SelectItem>
+                  <SelectItem value="2">2 horas</SelectItem>
+                  <SelectItem value="24">1 dia</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </Card>

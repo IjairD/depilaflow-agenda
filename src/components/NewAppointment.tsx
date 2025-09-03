@@ -25,6 +25,7 @@ const services = [
   { name: 'Rosto', price: 35 },
   { name: 'Barriga', price: 18 },
   { name: 'Depilação completa', price: 110 },
+  { name: 'Outro', price: 0 },
 ];
 
 export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
@@ -32,7 +33,9 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
     clientName: '',
     date: '',
     time: '',
-    service: '',
+    service1: '',
+    service2: '',
+    service3: '',
     price: 0,
     notes: '',
   });
@@ -55,8 +58,8 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
       newErrors.time = 'Horário é obrigatório';
     }
 
-    if (!formData.service) {
-      newErrors.service = 'Serviço é obrigatório';
+    if (!formData.service1) {
+      newErrors.service1 = 'Primeiro serviço é obrigatório';
     }
 
     if (formData.price <= 0) {
@@ -79,12 +82,17 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
     // Simula delay de salvamento
     await new Promise(resolve => setTimeout(resolve, 1000));
 
+    // Combine services
+    const selectedServices = [formData.service1, formData.service2, formData.service3]
+      .filter(service => service)
+      .join(' + ');
+
     const newAppointment: Appointment = {
       id: Date.now().toString(),
       clientName: formData.clientName,
       date: formData.date,
       time: formData.time,
-      service: formData.service,
+      service: selectedServices,
       price: formData.price,
       status: 'agendado',
       notes: formData.notes,
@@ -98,7 +106,9 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
       clientName: '',
       date: '',
       time: '',
-      service: '',
+      service1: '',
+      service2: '',
+      service3: '',
       price: 0,
       notes: '',
     });
@@ -106,13 +116,26 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
     setIsSubmitting(false);
   };
 
-  const handleServiceChange = (serviceName: string) => {
+  const handleServiceChange = (serviceKey: 'service1' | 'service2' | 'service3', serviceName: string) => {
     const service = services.find(s => s.name === serviceName);
-    setFormData(prev => ({
-      ...prev,
-      service: serviceName,
-      price: service?.price || 0,
-    }));
+    setFormData(prev => {
+      const newFormData = {
+        ...prev,
+        [serviceKey]: serviceName,
+      };
+      
+      // Calculate total price
+      const service1Price = serviceKey === 'service1' ? (service?.price || 0) : 
+        (services.find(s => s.name === prev.service1)?.price || 0);
+      const service2Price = serviceKey === 'service2' ? (service?.price || 0) : 
+        (services.find(s => s.name === prev.service2)?.price || 0);
+      const service3Price = serviceKey === 'service3' ? (service?.price || 0) : 
+        (services.find(s => s.name === prev.service3)?.price || 0);
+      
+      newFormData.price = service1Price + service2Price + service3Price;
+      
+      return newFormData;
+    });
   };
 
   const clearForm = () => {
@@ -120,7 +143,9 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
       clientName: '',
       date: '',
       time: '',
-      service: '',
+      service1: '',
+      service2: '',
+      service3: '',
       price: 0,
       notes: '',
     });
@@ -196,16 +221,19 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
             </div>
           </div>
 
-          {/* Serviço e Preço */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Serviços */}
+          <div className="space-y-4">
+            <Label className="flex items-center space-x-2">
+              <Scissors className="w-4 h-4" />
+              <span>Serviços</span>
+            </Label>
+            
+            {/* Primeiro Serviço (Obrigatório) */}
             <div className="space-y-2">
-              <Label className="flex items-center space-x-2">
-                <Scissors className="w-4 h-4" />
-                <span>Serviço</span>
-              </Label>
-              <Select value={formData.service} onValueChange={handleServiceChange}>
-                <SelectTrigger className={`glass ${errors.service ? 'border-destructive' : ''}`}>
-                  <SelectValue placeholder="Selecione o serviço" />
+              <Label className="text-sm font-medium">1º Serviço (obrigatório)</Label>
+              <Select value={formData.service1} onValueChange={(value) => handleServiceChange('service1', value)}>
+                <SelectTrigger className={`glass ${errors.service1 ? 'border-destructive' : ''}`}>
+                  <SelectValue placeholder="Selecione o primeiro serviço" />
                 </SelectTrigger>
                 <SelectContent>
                   {services.map((service) => (
@@ -215,37 +243,67 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
                   ))}
                 </SelectContent>
               </Select>
-              <Input
-                type="text"
-                placeholder="Ou digite um serviço personalizado"
-                value={formData.service}
-                onChange={(e) => setFormData(prev => ({ ...prev, service: e.target.value }))}
-                className={`glass mt-2 ${errors.service ? 'border-destructive' : ''}`}
-              />
-              {errors.service && (
-                <p className="text-sm text-destructive">{errors.service}</p>
+              {errors.service1 && (
+                <p className="text-sm text-destructive">{errors.service1}</p>
               )}
             </div>
 
+            {/* Segundo Serviço (Opcional) */}
             <div className="space-y-2">
-              <Label htmlFor="price" className="flex items-center space-x-2">
-                <DollarSign className="w-4 h-4" />
-                <span>Preço (R$)</span>
-              </Label>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="0.00"
-                value={formData.price}
-                onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                className={`glass ${errors.price ? 'border-destructive' : ''}`}
-              />
-              {errors.price && (
-                <p className="text-sm text-destructive">{errors.price}</p>
-              )}
+              <Label className="text-sm font-medium">2º Serviço (opcional)</Label>
+              <Select value={formData.service2} onValueChange={(value) => handleServiceChange('service2', value)}>
+                <SelectTrigger className="glass">
+                  <SelectValue placeholder="Selecione o segundo serviço" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Nenhum</SelectItem>
+                  {services.map((service) => (
+                    <SelectItem key={service.name} value={service.name}>
+                      {service.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Terceiro Serviço (Opcional) */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">3º Serviço (opcional)</Label>
+              <Select value={formData.service3} onValueChange={(value) => handleServiceChange('service3', value)}>
+                <SelectTrigger className="glass">
+                  <SelectValue placeholder="Selecione o terceiro serviço" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Nenhum</SelectItem>
+                  {services.map((service) => (
+                    <SelectItem key={service.name} value={service.name}>
+                      {service.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Preço Total */}
+          <div className="space-y-2">
+            <Label htmlFor="price" className="flex items-center space-x-2">
+              <DollarSign className="w-4 h-4" />
+              <span>Preço Total (R$)</span>
+            </Label>
+            <Input
+              id="price"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              value={formData.price}
+              onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+              className={`glass ${errors.price ? 'border-destructive' : ''}`}
+            />
+            {errors.price && (
+              <p className="text-sm text-destructive">{errors.price}</p>
+            )}
           </div>
 
           {/* Observações */}
@@ -316,7 +374,7 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
 }
 
 function getFormProgress(formData: any): number {
-  const fields = ['clientName', 'date', 'time', 'service'];
+  const fields = ['clientName', 'date', 'time', 'service1'];
   const filledFields = fields.filter(field => formData[field]?.toString().trim());
   const priceValid = formData.price > 0;
   
