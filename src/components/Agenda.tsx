@@ -42,6 +42,13 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
     new Date(a).getTime() - new Date(b).getTime()
   );
 
+  // Ordenar agendamentos dentro de cada data por ordem de criação (mais recentes primeiro)
+  Object.keys(appointmentsByDate).forEach(date => {
+    appointmentsByDate[date].sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  });
+
   const getStatusColor = (status: Appointment['status']) => {
     switch (status) {
       case 'agendado': return 'text-primary bg-primary-light';
@@ -164,7 +171,6 @@ export function Agenda({ appointments, onUpdateStatus, onDeleteAppointment }: Ag
               {/* Appointments for this date */}
               <div className="grid gap-3">
                 {appointmentsByDate[date]
-                  .sort((a, b) => a.time.localeCompare(b.time))
                   .map((appointment) => (
                     <Card 
                       key={appointment.id} 

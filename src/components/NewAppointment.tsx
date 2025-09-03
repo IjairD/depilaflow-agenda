@@ -294,11 +294,21 @@ export function NewAppointment({ onSave, onCancel }: NewAppointmentProps) {
             <Input
               id="price"
               type="number"
-              step="0.01"
+              step="1"
               min="0"
-              placeholder="0.00"
-              value={formData.price}
-              onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+              placeholder="0"
+              value={formData.price === 0 ? '' : formData.price}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setFormData(prev => ({ ...prev, price: 0 }));
+                } else {
+                  const numValue = parseInt(value, 10);
+                  if (!isNaN(numValue)) {
+                    setFormData(prev => ({ ...prev, price: numValue }));
+                  }
+                }
+              }}
               className={`glass ${errors.price ? 'border-destructive' : ''}`}
             />
             {errors.price && (

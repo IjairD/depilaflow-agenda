@@ -32,13 +32,23 @@ export function Settings() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    // Simula salvamento
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSaving(false);
-    
-    // Salva no localStorage
-    localStorage.setItem('nd_depilacao_settings', JSON.stringify(settings));
-    console.log('Settings saved:', settings);
+    try {
+      // Salva no localStorage
+      localStorage.setItem('nd_depilacao_settings', JSON.stringify(settings));
+      
+      // Simula salvamento
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Settings saved:', settings);
+      
+      // Feedback visual opcional (pode usar toast aqui)
+      alert('Configurações salvas com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar configurações:', error);
+      alert('Erro ao salvar configurações. Tente novamente.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const updateSetting = (path: string, value: any) => {
